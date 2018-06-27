@@ -1,0 +1,4 @@
+services:
+  azure_auth.test_service:
+    class: LouisSicard\AzureAuth\Service\TestService
+    arguments: ["@service_container", null]
