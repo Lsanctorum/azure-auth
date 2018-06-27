@@ -21,9 +21,7 @@ class AzureAuthRequestListener
   }
 
   public function onKernelRequest(GetResponseEvent $event) {
-    foreach($this->azureConfig as $k => $v) {
-      $event->getResponse()->headers->set('X-Louis-' . $k, [$v]);
-    }
+
   }
 
   private function isUserLoggedIn(){

@@ -17,6 +17,7 @@ class AzureAuthExtension extends Extension
 
     $loader = new YamlFileLoader($container, new FileLocator(dirname(__DIR__) . '/Resources/config'));
     $loader->load('services.yml');
+    $loader->load('routing.yml');
 
     $definition = $container->getDefinition('azure_auth.test_service');
     $definition->replaceArgument(1, $config['auth_url']);

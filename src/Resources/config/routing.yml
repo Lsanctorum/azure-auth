@@ -1,0 +1,3 @@
+azure_auth_logout:
+    path:     /azure_auth_logout
+    controller: LouisSicard\AzureAuth\Controller\AzureAuthController::logoutAction
