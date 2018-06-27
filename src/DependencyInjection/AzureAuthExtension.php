@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: louis
- * Date: 27/06/2018
- * Time: 12:17
- */
 
 namespace LouisSicard\AzureAuth\DependencyInjection;
 
@@ -16,9 +10,11 @@ class AzureAuthExtension extends Extension
 {
   public function load(array $configs, ContainerBuilder $container)
   {
-
     $configuration = new Configuration();
     $config = $this->processConfiguration($configuration, $configs);
+    foreach($config as $k => $v) {
+      $container->setParameter('azure_auth.' . $k, $v);
+    }
   }
 
 }
