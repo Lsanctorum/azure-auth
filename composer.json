@@ -1,0 +1,12 @@
+{
+  "name": "adimeo/azure-auth",
+  "require": {
+    "php": "^7.1.3",
+    "symfony/framework-bundle": "^4.1"
+  },
+  "autoload": {
+    "psr-4": {
+      "Adimeo\\AzureAuth\\": "src/"
+    }
+  }
+}
