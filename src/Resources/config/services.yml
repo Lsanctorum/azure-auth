@@ -8,3 +8,5 @@ services:
     arguments: [ "@service_container", "@router", null ]
     tags:
         - { name: kernel.event_listener, event: kernel.request, priority: 9 }
+  LouisSicard\AzureAuth\Routing\AzureAuthLoader:
+    tags: [routing.loader]
