@@ -3,7 +3,8 @@
   "type": "symfony-bundle",
   "require": {
     "php": "^7.1.3",
-    "symfony/framework-bundle": "^4.1"
+    "symfony/framework-bundle": "^4.1",
+    "symfony/security-bundle": "*"
   },
   "autoload": {
     "psr-4": {
