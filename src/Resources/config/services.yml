@@ -5,6 +5,6 @@ services:
     public: true
   azure_auth.request_listener:
     class: LouisSicard\AzureAuth\EventListener\AzureAuthRequestListener
-    arguments: [ "@service_container", null ]
+    arguments: [ "@service_container", "@router", null ]
     tags:
         - { name: kernel.event_listener, event: kernel.request, priority: 9 }

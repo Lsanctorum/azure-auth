@@ -23,7 +23,7 @@ class AzureAuthExtension extends Extension
     $definition->replaceArgument(1, $config['auth_url']);
 
     $listenerDefinition = $container->getDefinition('azure_auth.request_listener');
-    $listenerDefinition->replaceArgument(1, $config);
+    $listenerDefinition->replaceArgument(2, $config);
 
   }
 
