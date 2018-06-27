@@ -3,3 +3,8 @@ services:
     class: LouisSicard\AzureAuth\Service\TestService
     arguments: ["@service_container", null]
     public: true
+  azure_auth.request_listener:
+    class: LouisSicard\AzureAuth\EventListener\AzureAuthRequestListener
+    arguments: [ "@service_container", null ]
+    tags:
+        - { name: kernel.event_listener, event: kernel.request, priority: 9 }
