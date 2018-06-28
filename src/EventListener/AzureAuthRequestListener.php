@@ -104,21 +104,11 @@ class AzureAuthRequestListener
   private function getUser($email, $firstName, $lastName) {
     //Let's find which user class is compatible with our user provider
     $classes = get_declared_classes();
-    $userClass = NULL;
-    foreach($classes as $class) {
-      $interfaces = class_implements($class);
-      if($interfaces && in_array(AzureUser::class, $interfaces) && $this->userProvider->supportsClass($class)) {
-        $userClass = $class;
-        break;
-      }
-    }
-    if($userClass == NULL) {
-      throw new \RuntimeException('No user class compatible with user provider "' . get_class($this->userProvider) .'" found.');
-    }
+    $userClass = $this->userProvider->getSupportedClass();
     $user = $this->userProvider->loadUserByUsername($email);
     if($user == NULL) {
       /** @var AzureUser $user */
-      $user = new $class();
+      $user = new $userClass();
       $user->setUsername($email);
       $user->setFisrtName($firstName);
       $user->setLastName($lastName);
