@@ -23,6 +23,8 @@ class AzureAuthExtension extends Extension
 
     $listenerDefinition = $container->getDefinition('azure_auth.request_listener');
     $listenerDefinition->replaceArgument(2, $config);
+    if($config['user_provider'] != NULL)
+      $listenerDefinition->replaceArgument(3, $container->get($config['user_provider']));
 
   }
 

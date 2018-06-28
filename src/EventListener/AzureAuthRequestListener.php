@@ -3,12 +3,14 @@
 namespace LouisSicard\AzureAuth\EventListener;
 
 use LouisSicard\AzureAuth\Classes\AzureUser;
+use LouisSicard\AzureAuth\Classes\AzureUserProvider;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class AzureAuthRequestListener
 {
@@ -22,10 +24,14 @@ class AzureAuthRequestListener
   /** @var array */
   private $azureConfig;
 
-  public function __construct(Container $container, Router $router, $azureConfig) {
+  /** @var  AzureUserProvider */
+  private $userProvider;
+
+  public function __construct(Container $container, Router $router, $azureConfig, AzureUserProvider $userProvider) {
     $this->container = $container;
     $this->router = $router;
     $this->azureConfig = $azureConfig;
+    $this->userProvider = $userProvider;
   }
 
   public function onKernelRequest(GetResponseEvent $event)
@@ -45,21 +51,20 @@ class AzureAuthRequestListener
         $data = json_decode($r, true);
         $token_parts = explode('.', $data['id_token']);
         $userUniqueMail = null;
+        $firstName = NULL;
+        $lastName = NULL;
         foreach ($token_parts as $tok) {
           if (!empty($tok)) {
             $token = json_decode(base64_decode($tok), true);
             if ($token != null && isset($token['unique_name'])) {
               $userUniqueMail = $token['unique_name'];
+              $firstName = isset($token['given_name']) ? $token['given_name'] : "";
+              $lastName = isset($token['family_name']) ? $token['family_name'] : "";
             }
           }
         }
         if ($userUniqueMail != null) {
-          if (strpos($userUniqueMail, '@') !== FALSE) {
-            $username = explode('@', $userUniqueMail)[0];
-          } else {
-            $username = $userUniqueMail;
-          }
-          $user = new AzureUser($username, $userUniqueMail, []);
+          $user = $this->getUser($userUniqueMail, $firstName, $lastName);
           $token = new UsernamePasswordToken(
             $user,
             $user->getPassword(),
@@ -89,6 +94,40 @@ class AzureAuthRequestListener
         }
       }
 
+    }
+  }
+
+  /**
+   * @param string $email
+   * @return UserInterface
+   */
+  private function getUser($email, $firstName, $lastName) {
+    //Let's find which user class is compatible with our user provider
+    $classes = get_declared_classes();
+    $userClass = NULL;
+    foreach($classes as $class) {
+      $interfaces = class_implements($class);
+      if($interfaces && in_array(AzureUser::class, $interfaces) && $this->userProvider->supportsClass($class)) {
+        $userClass = $class;
+        break;
+      }
+    }
+    if($userClass == NULL) {
+      throw new \RuntimeException('No user class compatible with user provider "' . get_class($this->userProvider) .'" found.');
+    }
+    $user = $this->userProvider->loadUserByUsername($email);
+    if($user == NULL) {
+      /** @var AzureUser $user */
+      $user = new $class();
+      $user->setUsername($email);
+      $user->setFisrtName($firstName);
+      $user->setLastName($lastName);
+      $user->setEmail($email);
+      $this->userProvider->persist($user);
+      return $user;
+    }
+    else {
+      return $user;
     }
   }
 
