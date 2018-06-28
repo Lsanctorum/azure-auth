@@ -39,7 +39,7 @@ class AzureAuthRequestListener
           'client_id' => $this->azureConfig['client_id'],
           'client_secret' => $this->azureConfig['client_secret'],
           'code' => $code,
-          'redirect_uri' => $this->router->generate('azure_auth_redirect', array('redirect' => $event->getRequest()->get('redirect'))),
+          'redirect_uri' => $this->router->generate('azure_auth_redirect', array('redirect' => $event->getRequest()->get('redirect')), Router::ABSOLUTE_URL),
           'resource' => $this->azureConfig['client_id']
         ), 'POST', array('Content-Type' => 'application/x-www-form-urlencoded'));
         $data = json_decode($r, true);
@@ -71,7 +71,7 @@ class AzureAuthRequestListener
 
           $this->container->get('session')->set('_security_main', serialize($token));
 
-          $event->setResponse(new RedirectResponse($event->getRequest()->get('redirect')));
+          $event->setResponse(new RedirectResponse($event->getRequest()->get('state')));
           return;
         }
       }
@@ -79,10 +79,12 @@ class AzureAuthRequestListener
     else {
       if(!$this->isUserLoggedIn()){
         $route = $event->getRequest()->get('_route');
+        if($route == NULL)
+          return;
         $excludedRoutes = ['azure_auth_redirect', 'azure_auth_logout'];
         if(!in_array($route, $excludedRoutes)) {
-          $redirect = $this->router->generate('azure_auth_redirect', array('redirect' => $this->router->generate($route, $event->getRequest()->request->all())));
-          $url = $this->azureConfig['auth_url'] . '?client_id=' . urlencode($this->azureConfig['client_id']) . '&response_type=code&redirect_uri=' . urlencode($redirect);
+          $redirect = $this->router->generate('azure_auth_redirect', [], Router::ABSOLUTE_URL);
+          $url = $this->azureConfig['auth_url'] . '?client_id=' . urlencode($this->azureConfig['client_id']) . '&response_type=code&redirect_uri=' . urlencode($redirect) . '&state=' . urlencode($this->router->generate($route, $event->getRequest()->request->all(), Router::ABSOLUTE_URL));
           $event->setResponse(new RedirectResponse($url));
         }
       }
