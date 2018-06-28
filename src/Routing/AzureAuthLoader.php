@@ -38,6 +38,16 @@ class AzureAuthLoader extends Loader
         [])
     );
 
+    $routes->add(
+      'logout',
+      new Route(
+        '/logout',
+        array(
+          '_controller' => 'LouisSicard\AzureAuth\Controller\AzureAuthController::logout',
+        ),
+        [])
+    );
+
     $this->isLoaded = true;
 
     return $routes;
