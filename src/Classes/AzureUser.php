@@ -8,9 +8,9 @@ use Symfony\Component\Security\Core\User\UserInterface;
 interface AzureUser extends UserInterface
 {
 
-  function setUsername($username);
-  function setFisrtName($firstName);
-  function setLastName($lastName);
-  function setEmail($email);
+  function setUsername(string $username);
+  function setFisrtName(string $firstName);
+  function setLastName(string $lastName);
+  function setEmail(string $email);
 
 }
