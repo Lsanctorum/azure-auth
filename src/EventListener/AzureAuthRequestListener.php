@@ -27,11 +27,11 @@ class AzureAuthRequestListener
   /** @var  AzureUserProvider */
   private $userProvider;
 
-  public function __construct(Container $container, Router $router, $azureConfig, AzureUserProvider $userProvider) {
+  public function __construct(Container $container, Router $router, $azureConfig, $userProviderId) {
     $this->container = $container;
     $this->router = $router;
     $this->azureConfig = $azureConfig;
-    $this->userProvider = $userProvider;
+    $this->userProvider = $container->get($userProviderId);
   }
 
   public function onKernelRequest(GetResponseEvent $event)

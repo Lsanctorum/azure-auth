@@ -11,6 +11,6 @@ interface AzureUser extends UserInterface
   function setUsername($username);
   function setFisrtName($firstName);
   function setLastName($lastName);
-  function setEmail($firstName);
+  function setEmail($email);
 
 }

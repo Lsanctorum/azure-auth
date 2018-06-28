@@ -18,7 +18,7 @@ class Configuration implements ConfigurationInterface
       ->scalarNode('token_url')->defaultValue('https://login.microsoftonline.com/AUTH_TOKEN/oauth2/token')->end()
       ->scalarNode('client_id')->defaultValue('CLIENT_ID')->end()
       ->scalarNode('client_secret')->defaultValue('CLIENT_SECRET')->end()
-      ->scalarNode('user_provider')->defaultValue(NULL)->end()
+      ->scalarNode('user_provider_id')->defaultValue(NULL)->end()
       ->end()
       ->end();
 
