@@ -23,7 +23,7 @@ class AzureAuthLoader extends Loader
       new Route(
         '/azure_auth_redirect',
         array(
-          '_controller' => 'LouisSicard\AzureAuth\Controller\AzureAuthController::redirect',
+          '_controller' => 'LouisSicard\AzureAuth\Controller\AzureAuthController::redirectAction',
         ),
         [])
     );
@@ -33,7 +33,7 @@ class AzureAuthLoader extends Loader
       new Route(
         '/azure_auth_logout',
         array(
-          '_controller' => 'LouisSicard\AzureAuth\Controller\AzureAuthController::logout',
+          '_controller' => 'LouisSicard\AzureAuth\Controller\AzureAuthController::logoutAction',
         ),
         [])
     );
@@ -43,7 +43,7 @@ class AzureAuthLoader extends Loader
       new Route(
         '/logout',
         array(
-          '_controller' => 'LouisSicard\AzureAuth\Controller\AzureAuthController::logout',
+          '_controller' => 'LouisSicard\AzureAuth\Controller\AzureAuthController::logoutAction',
         ),
         [])
     );
