@@ -3,10 +3,10 @@
 namespace LouisSicard\AzureAuth\EventListener;
 
 use LouisSicard\AzureAuth\Classes\AzureUser;
+use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -16,13 +16,13 @@ class AzureAuthRequestListener
   /** @var  Container */
   private $container;
 
-  /** @var  UrlGenerator */
+  /** @var  Router */
   private $router;
 
   /** @var array */
   private $azureConfig;
 
-  public function __construct(Container $container, UrlGenerator $router, $azureConfig) {
+  public function __construct(Container $container, Router $router, $azureConfig) {
     $this->container = $container;
     $this->router = $router;
     $this->azureConfig = $azureConfig;
