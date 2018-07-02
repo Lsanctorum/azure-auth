@@ -1,0 +1,7 @@
+azure_auth_redirect:
+  path:     /azure_auth_redirect
+  controller: LouisSicard\AzureAuth\Controller\AzureAuthController::redirect
+
+azure_auth_logout:
+  path:     /azure_auth_logout
+  controller: LouisSicard\AzureAuth\Controller\AzureAuthController::logout
