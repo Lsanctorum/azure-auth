@@ -15,6 +15,8 @@ class AzureAuthExtension extends Extension
     $configuration = new Configuration();
     $config = $this->processConfiguration($configuration, $configs);
 
+    $container->setParameter('azure_auth_config', $config);
+
     $loader = new YamlFileLoader($container, new FileLocator(dirname(__DIR__) . '/Resources/config'));
     $loader->load('services.yml');
 
