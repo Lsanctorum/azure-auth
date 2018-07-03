@@ -6,14 +6,11 @@ namespace LouisSicard\AzureAuth\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Router;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 class AzureAuthController extends Controller
 {
-
-  public function redirectAction(Request $request) {
-    return $this->redirect($request->get('redirect'));
-  }
 
   public function loginAction(Request $request) {
     $code = $request->get('code');
@@ -78,12 +75,12 @@ class AzureAuthController extends Controller
         }
       }
       $url = $config['auth_url'] . '?client_id=' . urlencode($config['client_id']) . '&response_type=code&redirect_uri=' . urlencode($redirectUrl) . '&state=' . urlencode(isset($finalUrl) ? $finalUrl : '');
-      $this->redirect($url);
+      return $this->redirect($url);
     }
   }
 
   public function logoutAction(Request $request) {
-    $this->container->get('security.context')->setToken(null);
+    $this->container->get('security.token_storage')->setToken(null);
     $request->getSession()->invalidate();
     return $this->redirect('https://login.windows.net/common/oauth2/logout');
   }
@@ -95,8 +92,10 @@ class AzureAuthController extends Controller
   private function getAzureUser($email, $firstName, $lastName) {
     //Let's find which user class is compatible with our user provider
     $classes = get_declared_classes();
-    $userClass = $this->userProvider->getSupportedClass();
-    $user = $this->userProvider->loadUserByUsername($email);
+    $config = $this->container->getParameter('azure_auth_config');
+    $userProvider = $this->container->get($config['user_provider_id']);
+    $userClass = $userProvider->getSupportedClass();
+    $user = $userProvider->loadUserByUsername($email);
     if($user == NULL) {
       /** @var AzureUser $user */
       $user = new $userClass();
@@ -104,7 +103,7 @@ class AzureAuthController extends Controller
       $user->setFisrtName($firstName);
       $user->setLastName($lastName);
       $user->setEmail($email);
-      $this->userProvider->persist($user);
+      $userProvider->persist($user);
       return $user;
     }
     else {
