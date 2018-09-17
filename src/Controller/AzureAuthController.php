@@ -56,7 +56,9 @@ class AzureAuthController extends Controller
         $this->container->get('session')->set('_security_main', serialize($token));
 
         return $this->redirect($request->get('state'));
-        return;
+      }
+      else {
+        throw new \RuntimeException("No mail return by Azure with token " . $data['id_token']);
       }
     }
     elseif($error != null) { //There is an error
