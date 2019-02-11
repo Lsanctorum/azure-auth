@@ -3,6 +3,7 @@
 namespace LouisSicard\AzureAuth\Controller;
 
 
+use Base64Url\Base64Url;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -34,7 +35,7 @@ class AzureAuthController extends Controller
       $lastName = NULL;
       foreach ($token_parts as $tok) {
         if (!empty($tok)) {
-          $token = json_decode(base64_decode($tok), true);
+          $token = json_decode(Base64Url::decode($tok), true);
           if ($token != null && isset($token['unique_name'])) {
             $userUniqueMail = $token['unique_name'];
             $firstName = isset($token['given_name']) ? $token['given_name'] : "";
