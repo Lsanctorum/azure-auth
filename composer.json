@@ -4,7 +4,9 @@
   "require": {
     "php": "^7.1.3",
     "symfony/framework-bundle": "^4.1",
-    "symfony/security-bundle": "*"
+    "symfony/security-bundle": "*",
+    "spomky-labs/base64url": "^2.0",
+    "ext-json": "*"
   },
   "autoload": {
     "psr-4": {
